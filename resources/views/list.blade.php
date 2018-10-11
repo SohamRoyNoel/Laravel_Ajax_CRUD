@@ -33,6 +33,7 @@
     </div>
 </div>
 
+
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -42,12 +43,13 @@
             </div>
             <div class="modal-body">
                 <p>
-                    {!! Form::open(['method'=>'POST', 'files'=>true]) !!}
 
-                        <div class="form-group">
-                            {!! Form::label('title', 'Post Title:') !!}
-                            {!! Form::text('title', null, ['class'=>'form-control', 'placeholder'=>'Name', 'id'=>'addItem']) !!}
-                        </div>
+                {!! Form::open(['method'=>'POST', 'files'=>true]) !!}
+
+                <div class="form-group">
+                    {!! Form::label('item', 'Post Title:') !!}
+                    {!! Form::text('item', null, ['class'=>'form-control', 'placeholder'=>'Name', 'id'=>'addItem']) !!}
+                </div>
                 </p>
             </div>
             <div class="modal-footer">
@@ -82,14 +84,21 @@
         });
 
         $('#addNew').click(function (event) {
-                $('#title').text('Edit Item');
-                $('#addItem').val("");
-                $('#delete').hide('400');
-                $('#saveChanges').hide('400');
-                $('#AddButton').show('400');
-                console.log();
+            $('#title').text('Edit Item');
+            $('#addItem').val("");
+            $('#delete').hide('400');
+            $('#saveChanges').hide('400');
+            $('#AddButton').show('400');
+            console.log();
+        });
+
+        $('#AddButton').click(function (event) {
+            var text = $('#addItem').val();
+            $.post('list', {'text':text, '_token':$('input[name=_token]').val()}, function (data) {
+                console.log(data);
             });
 
+        })
 
     });
 </script>
