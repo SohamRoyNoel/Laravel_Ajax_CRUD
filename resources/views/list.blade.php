@@ -19,13 +19,13 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Ajax List <a href="" id="addNew" class="pull-right" data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i></a> </h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" id="items">
                     <ul class="list-group">
-                        <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Cras justo odio</li>
-                        <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Dapibus ac facilisis in</li>
-                        <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Morbi leo risus</li>
-                        <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Porta ac consectetur ac</li>
-                        <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Vestibulum at eros</li>
+                        @foreach($items as $item)
+                            <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">{{$item->item}}
+                                <input type="hidden" id="itemId" value="{{$item->id}}">
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -46,6 +46,8 @@
 
                 {!! Form::open(['method'=>'POST', 'files'=>true]) !!}
 
+                <input type="hidden" id="id">
+
                 <div class="form-group">
                     {!! Form::label('item', 'Post Title:') !!}
                     {!! Form::text('item', null, ['class'=>'form-control', 'placeholder'=>'Name', 'id'=>'addItem']) !!}
@@ -55,7 +57,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" id="delete" data-dismiss="modal" style="display: none">Delete</button>
                 <button type="button" class="btn btn-warning" id="saveChanges" style="display: none">Save</button>
-                <button type="button" class="btn btn-success" id="AddButton">Add Item</button>
+                <button type="button" class="btn btn-success" id="AddButton" data-dismiss="modal">Add Item</button>
                 {!! Form::close() !!}
             </div>
         </div><!-- /.modal-content -->
@@ -71,19 +73,19 @@
 
 <script>
     $(document).ready(function () {
-        $('.ourItem').each(function () {
-            $(this).click(function (event) {
-                var  text = $(this).text();
-                $('#title').text('Edit Item')
-                $('#addItem').val(text);
-                $('#delete').show('400')
-                $('#saveChanges').show('400');
-                $('#AddButton').hide('400');
-                console.log(text);
-            })
+        $(document).on('click', '.ourItem', function (event) {
+            var  text = $(this).text();
+            var id = $(this).find('#itemId').val(); // pulls particular value from li
+            $('#title').text('Edit Item');
+            $('#addItem').val(text);
+            $('#delete').show('400');
+            $('#saveChanges').show('400');
+            $('#AddButton').hide('400');
+            $('#id').val(id);
+            console.log(text);
         });
 
-        $('#addNew').click(function (event) {
+        $(document).on('click', '#addNew', function (event) {
             $('#title').text('Edit Item');
             $('#addItem').val("");
             $('#delete').hide('400');
@@ -94,9 +96,19 @@
 
         $('#AddButton').click(function (event) {
             var text = $('#addItem').val();
-            $.post('list', {'text':text, '_token':$('input[name=_token]').val()}, function (data) {
+            $.post('list', {'text':text, '_token':$('input[name=_token]').val()}, function (data) { //passes to controller
                 console.log(data);
+                $('#items').load(location.href + ' #items'); // hold the PANEL and refresh it in a go - *Space is needed before #items*
             });
+
+        })
+
+        $('#delete').click(function (event) {
+            var id = $("#id").val();
+            $.post('delete', {'id':id, '_token':$('input[name=_token]').val()}, function (data) {
+                console.log(data);
+                $('#items').load(location.href + ' #items'); // hold the PANEL and refresh it in a go - *Space is needed before #items*
+            })
 
         })
 
