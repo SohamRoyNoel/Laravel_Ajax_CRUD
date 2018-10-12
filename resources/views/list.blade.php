@@ -13,13 +13,13 @@
 <body>
 {{--// all things CSS & JS are done under 3.2.2 ver @ : https://getbootstrap.com/docs/3.3/javascript/#modals--}}
 <div class="container" style="padding-top: 20px">
-    <div class="row">
+    <div class="row" id="items">
         <div class="col-lg-offset-2 col-lg-8">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Ajax List <a href="" id="addNew" class="pull-right" data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i></a> </h3>
                 </div>
-                <div class="panel-body" id="items">
+                <div class="panel-body">
                     <ul class="list-group">
                         @foreach($items as $item)
                             <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">{{$item->item}}
@@ -77,6 +77,7 @@
             var  text = $(this).text();
             var id = $(this).find('#itemId').val(); // pulls particular value from li
             $('#title').text('Edit Item');
+            var text = $.trim(text); // trims the spaces from the string
             $('#addItem').val(text);
             $('#delete').show('400');
             $('#saveChanges').show('400');
@@ -96,11 +97,14 @@
 
         $('#AddButton').click(function (event) {
             var text = $('#addItem').val();
-            $.post('list', {'text':text, '_token':$('input[name=_token]').val()}, function (data) { //passes to controller
-                console.log(data);
-                $('#items').load(location.href + ' #items'); // hold the PANEL and refresh it in a go - *Space is needed before #items*
-            });
-
+            if (text == ""){
+                alert("Please type anything meaningful you dumbass");
+            } else {
+                $.post('list', {'text':text, '_token':$('input[name=_token]').val()}, function (data) { //passes to controller
+                    console.log(data);
+                    $('#items').load(location.href + ' #items'); // hold the PANEL and refresh it in a go - *Space is needed before #items*
+                });
+            }
         });
 
         $('#delete').click(function (event) {
@@ -113,7 +117,7 @@
 
         $('#saveChanges').click(function (event) {
             var id = $("#id").val();
-            var value = $(" #addItem").val(); // Collecting the value from the text field
+            var value = $.trim($(" #addItem").val()); // Collecting the value from the text field
             $.post('update', {'id':id, 'value': value , '_token':$('input[name=_token]').val()}, function (data) {
                 $('#items').load(location.href + ' #items');
                 console.log(data);
