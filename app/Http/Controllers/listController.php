@@ -53,4 +53,20 @@ class listController extends Controller
 
         Item::where('id', $request->id)->delete();
     }
+
+    public function search(Request $request)
+    {
+            $term = $request->term; // pulls the value from the searchbar : $request->term; should be used to catch val
+            $item = Item::where('item', 'LIKE', '%'. $term . '%')->get();
+
+            if (count($item) == 0){
+                $searchResult[] = "no item";
+            } else{
+                foreach ($item as $key=>$value){
+                    $searchResult[] = $value->item;
+                }
+            }
+
+            return $searchResult;
+    }
 }

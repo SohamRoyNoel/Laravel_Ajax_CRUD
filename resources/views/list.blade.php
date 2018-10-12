@@ -9,12 +9,13 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-</head>
+    {{--Jquery UI CDN--}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" /></head>
 <body>
 {{--// all things CSS & JS are done under 3.2.2 ver @ : https://getbootstrap.com/docs/3.3/javascript/#modals--}}
 <div class="container" style="padding-top: 20px">
     <div class="row" id="items">
-        <div class="col-lg-offset-2 col-lg-8">
+        <div class="col-lg-offset col-lg-8">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Ajax List <a href="" id="addNew" class="pull-right" data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i></a> </h3>
@@ -30,6 +31,16 @@
                 </div>
             </div>
         </div>
+        {{--Search--}}
+            <div class="col-lg-4">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">Search</div>
+                    <div class="panel-body">
+                        <input type="text" class="form-control" name="searchItem" id="searchItem" placeholder="Search">
+                    </div>
+                </div>
+            </div>
+        {{--Search--}}
     </div>
 </div>
 
@@ -70,7 +81,7 @@
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
         crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script>
     $(document).ready(function () {
         $(document).on('click', '.ourItem', function (event) {
@@ -123,6 +134,37 @@
                 console.log(data);
             });
         });
+
+        // Auto Complete Search
+        $( function() {
+            var availableTags = [
+                "ActionScript",
+                "AppleScript",
+                "Asp",
+                "BASIC",
+                "C",
+                "C++",
+                "Clojure",
+                "COBOL",
+                "ColdFusion",
+                "Erlang",
+                "Fortran",
+                "Groovy",
+                "Haskell",
+                "Java",
+                "JavaScript",
+                "Lisp",
+                "Perl",
+                "PHP",
+                "Python",
+                "Ruby",
+                "Scala",
+                "Scheme"
+            ];
+            $( "#searchItem" ).autocomplete({
+                source: 'http://localhost/AjaxCrudToDoList/public/search'
+            });
+        } );
     });
 </script>
 </body>
