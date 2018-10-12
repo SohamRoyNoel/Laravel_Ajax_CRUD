@@ -56,7 +56,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" id="delete" data-dismiss="modal" style="display: none">Delete</button>
-                <button type="button" class="btn btn-warning" id="saveChanges" style="display: none">Save</button>
+                <button type="button" class="btn btn-warning" id="saveChanges" data-dismiss="modal" style="display: none">Save</button>
                 <button type="button" class="btn btn-success" id="AddButton" data-dismiss="modal">Add Item</button>
                 {!! Form::close() !!}
             </div>
@@ -101,17 +101,24 @@
                 $('#items').load(location.href + ' #items'); // hold the PANEL and refresh it in a go - *Space is needed before #items*
             });
 
-        })
+        });
 
         $('#delete').click(function (event) {
             var id = $("#id").val();
             $.post('delete', {'id':id, '_token':$('input[name=_token]').val()}, function (data) {
                 console.log(data);
                 $('#items').load(location.href + ' #items'); // hold the PANEL and refresh it in a go - *Space is needed before #items*
-            })
+            });
+        });
 
-        })
-
+        $('#saveChanges').click(function (event) {
+            var id = $("#id").val();
+            var value = $(" #addItem").val(); // Collecting the value from the text field
+            $.post('update', {'id':id, 'value': value , '_token':$('input[name=_token]').val()}, function (data) {
+                $('#items').load(location.href + ' #items');
+                console.log(data);
+            });
+        });
     });
 </script>
 </body>

@@ -37,9 +37,11 @@ class listController extends Controller
         //
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $item = Item::find($request->id);
+        $item->item = $request->value;
+        $item->save();
     }
 
     public function destroy($id)
